@@ -1,0 +1,310 @@
+#!/bin/bash
+
+# Base directory for temporary environments
+BASE_DIR="/tmp/tmpcode"
+
+# Function to get the highest numbered environment for a language
+get_highest_env() {
+    lang="$1"
+    if [ -d "$BASE_DIR/$lang" ]; then
+        ls -1 "$BASE_DIR/$lang" | grep -E "^tmp[0-9]+$" | sort -V | tail -n 1 | sed 's/tmp//'
+    else
+        echo -1
+    fi
+}
+
+# Function to create a new environment
+create_new_env() {
+    lang="$1"
+    last_num=$(get_highest_env "$lang")
+    new_num=$((last_num + 1))
+    new_dir="$BASE_DIR/$lang/tmp$new_num"
+    mkdir -p "$new_dir"
+    echo "$new_dir"
+}
+
+# Function to list all environments
+list_envs() {
+    lang="$1"
+    if [ -d "$BASE_DIR/$lang" ]; then
+        ls -1 "$BASE_DIR/$lang" | grep -E "^tmp[0-9]+$"
+    else
+        echo "No $lang environment has been created since booting."
+    fi
+}
+
+# Function to delete all environments
+clean_envs() {
+    lang="$1"
+    if [ -d "$BASE_DIR/$lang" ]; then
+        rm -rf "$BASE_DIR/$lang"
+        echo "All $lang environments deleted."
+    else
+        echo "No $lang environment has been created since booting."
+    fi
+}
+
+# Function to delete a specific environment
+remove_env() {
+    lang="$1"
+    num="$2"
+    if [ -d "$BASE_DIR/$lang/tmp$num" ]; then
+        rm -rf "$BASE_DIR/$lang/tmp$num"
+        echo "Environment tmp$num deleted."
+    else
+        echo "Environment tmp$num does not exist."
+    fi
+}
+
+# Function to handle Rust environment
+handle_rust() {
+    cmd="$1"
+    case "$cmd" in
+        new)
+            dir=$(create_new_env "rust")
+            cd "$dir"
+            cargo init
+            nvim src/main.rs
+            ;;
+        list)
+            list_envs "rust"
+            ;;
+        clean)
+            clean_envs "rust"
+            ;;
+        rm)
+            remove_env "rust" "$2"
+            ;;
+        *)
+            if [ -z "$cmd" ]; then
+                last_num=$(get_highest_env "rust")
+                if [ "$last_num" -eq -1 ]; then
+                    dir=$(create_new_env "rust")
+                    cd "$dir"
+                    cargo init
+                else
+                    dir="$BASE_DIR/rust/tmp$last_num"
+                    cd "$dir"
+                fi
+                nvim src/main.rs
+            else
+                dir="$BASE_DIR/rust/tmp$cmd"
+                if [ -d "$dir" ]; then
+                    cd "$dir"
+                    nvim src/main.rs
+                else
+                    echo "Environment tmp$cmd does not exist."
+                fi
+            fi
+            ;;
+    esac
+}
+
+# Function to handle Python environment
+handle_python() {
+    cmd="$1"
+    case "$cmd" in
+        new)
+            dir=$(create_new_env "python")
+            cd "$dir"
+            python -m venv .venv --symlinks
+            echo "#!/usr/bin/env python" > temp.py
+            sleep 1
+            source .venv/bin/activate
+            nvim temp.py
+            ;;
+        list)
+            list_envs "python"
+            ;;
+        clean)
+            clean_envs "python"
+            ;;
+        rm)
+            remove_env "python" "$2"
+            ;;
+        *)
+            if [ -z "$cmd" ]; then
+                last_num=$(get_highest_env "python")
+                if [ "$last_num" -eq -1 ]; then
+                    dir=$(create_new_env "python")
+                    cd "$dir"
+                    python -m venv .venv --symlinks
+                    echo "#!/usr/bin/env python" > temp.py
+                    source ./.venv/bin/activate
+                else
+                    dir="$BASE_DIR/python/tmp$last_num"
+                    cd "$dir"
+                    source ./.venv/bin/activate
+                fi
+                nvim temp.py
+            else
+                dir="$BASE_DIR/python/tmp$cmd"
+                if [ -d "$dir" ]; then
+                    cd "$dir"
+                    source ./.venv/bin/activate
+                    nvim temp.py
+                else
+                    echo "Environment tmp$cmd does not exist."
+                fi
+            fi
+            ;;
+    esac
+}
+
+# Function to handle Lua environment
+handle_lua() {
+    cmd="$1"
+    case "$cmd" in
+        new)
+            dir=$(create_new_env "lua")
+            cd "$dir"
+            nvim src/main.lua
+            ;;
+        list)
+            list_envs "lua"
+            ;;
+        clean)
+            clean_envs "lua"
+            ;;
+        rm)
+            remove_env "lua" "$2"
+            ;;
+        *)
+            if [ -z "$cmd" ]; then
+                last_num=$(get_highest_env "lua")
+                if [ "$last_num" -eq -1 ]; then
+                    dir=$(create_new_env "lua")
+                    cd "$dir"
+                    cargo init
+                else
+                    dir="$BASE_DIR/lua/tmp$last_num"
+                    cd "$dir"
+                fi
+                nvim src/main.lua
+            else
+                dir="$BASE_DIR/lua/tmp$cmd"
+                if [ -d "$dir" ]; then
+                    cd "$dir"
+                    nvim src/main.lua
+                else
+                    echo "Environment tmp$cmd does not exist."
+                fi
+            fi
+            ;;
+    esac
+}
+
+# Function to handle Fish environment
+handle_lua() {
+    cmd="$1"
+    case "$cmd" in
+        new)
+            dir=$(create_new_env "fish")
+            cd "$dir"
+            nvim src/main.fish
+            ;;
+        list)
+            list_envs "fish"
+            ;;
+        clean)
+            clean_envs "fish"
+            ;;
+        rm)
+            remove_env "fish" "$2"
+            ;;
+        *)
+            if [ -z "$cmd" ]; then
+                last_num=$(get_highest_env "fish")
+                if [ "$last_num" -eq -1 ]; then
+                    dir=$(create_new_env "fish")
+                    cd "$dir"
+                    cargo init
+                else
+                    dir="$BASE_DIR/fish/tmp$last_num"
+                    cd "$dir"
+                fi
+                nvim src/main.fish
+            else
+                dir="$BASE_DIR/fish/tmp$cmd"
+                if [ -d "$dir" ]; then
+                    cd "$dir"
+                    nvim src/main.fish
+                else
+                    echo "Environment tmp$cmd does not exist."
+                fi
+            fi
+            ;;
+    esac
+}
+
+handle_cpp() {
+    cmd="$1"
+    case "$cmd" in
+        new)
+            dir=$(create_new_env "cpp")
+            cd "$dir"
+            cmake-init-full
+            nvim src/main.cpp
+            ;;
+        list)
+            list_envs "cpp"
+            ;;
+        clean)
+            clean_envs "cpp"
+            ;;
+        rm)
+            remove_env "cpp" "$2"
+            ;;
+        *)
+            if [ -z "$cmd" ]; then
+                last_num=$(get_highest_env "cpp")
+                if [ "$last_num" -eq -1 ]; then
+                    dir=$(create_new_env "cpp")
+                    cd "$dir"
+                    cargo init
+                else
+                    dir="$BASE_DIR/cpp/tmp$last_num"
+                    cd "$dir"
+                fi
+                nvim src/main.rs
+            else
+                dir="$BASE_DIR/cpp/tmp$cmd"
+                if [ -d "$dir" ]; then
+                    cd "$dir"
+                    nvim src/main.rs
+                else
+                    echo "Environment tmp$cmd does not exist."
+                fi
+            fi
+            ;;
+    esac
+}
+
+
+# Main logic
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <language> [command]"
+    exit 1
+fi
+
+lang="$1"
+shift
+
+case "$lang" in
+    rust)
+        handle_rust "$@"
+        ;;
+    python)
+        handle_python "$@"
+        ;;
+    fish)
+        handle_fish "$@"
+        ;;
+    lua)
+        handle_lua "$@"
+        ;;
+    *)
+        echo "Unsupported language: $lang"
+        exit 1
+        ;;
+esac
