@@ -1,0 +1,6 @@
+relink
+*.hidden
+*.bak
+*.bak*
+
+
