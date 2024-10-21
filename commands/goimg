@@ -1,0 +1,7 @@
+#!/bin/bash
+
+query="$@"
+script="import urllib.parse; print(urllib.parse.quote('+'.join('$query'.replace('+','%00').split())).replace('%2B', '+').replace('%2500', '%2B'))"
+encoded_query=$(python3 -c "$script")
+url="https://google.com/search?q=$encoded_query&udm=2"
+xdg-open "$url"
