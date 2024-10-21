@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# (E)dit (P)ipe (D)elete
+
+show_help() {
+  echo "epd (E)dit (P)ipe (D)elete"
+  echo "Usage: $(basename "$0") [COMMAND]"
+  echo
+  echo "This script creates a temporary file, opens it with your editor (as defined by the \$EDITOR environment variable),"
+  echo "and then pipes the file's contents to the specified command. After piping the contents, the temporary file is deleted."
+  echo "It edits, pipes, deletes."
+  echo
+  echo "Example:"
+  echo "  $(basename "$0") hexdump"
+  echo
+  echo "Options:"
+  echo "  --help    Display this help message and exit."
+}
+
+# Check for help flag
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    show_help
+    exit 0
+fi
+
+# Create a temporary file in /tmp
+tempfile=$(mktemp /tmp/tempfile.XXXXXX)
+
+# Open the temporary file in the editor defined by $EDITOR
+"${EDITOR:-vi}" "$tempfile"
+
+# After closing the editor, pipe the contents of the temporary file to the specified command
+cat "$tempfile" | $@
+
+# Delete the temporary file
+rm "$tempfile"
