@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+from sys import argv, stdin
+from os import system
+
+argvl = list(argv)[1:]
+
+for expr_idx, expr in enumerate(argvl):
+  if expr == '--help':
+      print("Quick Python Expressions v0.1.0") 
+      print("\nUsage: qpe [expression] [expression] ...\n")
+      print("Every expression apart from the last is passed to exec")
+      print("The last is passed to eval and printed.\n")
+      raise SystemExit
+
+  if expr_idx != len(argvl)-1:
+    exec(expr)
+  else:
+    print(eval('(' + expr + ')'))
