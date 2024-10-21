@@ -80,17 +80,17 @@ handle_rust() {
                 last_num=$(get_highest_env "rust")
                 if [ "$last_num" -eq -1 ]; then
                     dir=$(create_new_env "rust")
-                    cd "$dir"
+                    cd "$dir" || exit
                     cargo init
                 else
                     dir="$BASE_DIR/rust/tmp$last_num"
-                    cd "$dir"
+                    cd "$dir" || exit
                 fi
                 nvim src/main.rs
             else
                 dir="$BASE_DIR/rust/tmp$cmd"
                 if [ -d "$dir" ]; then
-                    cd "$dir"
+                    cd "$dir" || exit
                     nvim src/main.rs
                 else
                     echo "Environment tmp$cmd does not exist."
@@ -106,7 +106,7 @@ handle_python() {
     case "$cmd" in
         new)
             dir=$(create_new_env "python")
-            cd "$dir"
+            cd "$dir" || exit
             python -m venv .venv --symlinks
             echo "#!/usr/bin/env python" > temp.py
             sleep 1
@@ -175,7 +175,6 @@ handle_lua() {
                 if [ "$last_num" -eq -1 ]; then
                     dir=$(create_new_env "lua")
                     cd "$dir"
-                    cargo init
                 else
                     dir="$BASE_DIR/lua/tmp$last_num"
                     cd "$dir"
@@ -195,7 +194,7 @@ handle_lua() {
 }
 
 # Function to handle Fish environment
-handle_lua() {
+handle_fish() {
     cmd="$1"
     case "$cmd" in
         new)
@@ -218,7 +217,6 @@ handle_lua() {
                 if [ "$last_num" -eq -1 ]; then
                     dir=$(create_new_env "fish")
                     cd "$dir"
-                    cargo init
                 else
                     dir="$BASE_DIR/fish/tmp$last_num"
                     cd "$dir"
@@ -243,7 +241,7 @@ handle_cpp() {
         new)
             dir=$(create_new_env "cpp")
             cd "$dir"
-            cmake-init-full
+            cmake-init
             nvim src/main.cpp
             ;;
         list)
@@ -261,17 +259,58 @@ handle_cpp() {
                 if [ "$last_num" -eq -1 ]; then
                     dir=$(create_new_env "cpp")
                     cd "$dir"
-                    cargo init
                 else
                     dir="$BASE_DIR/cpp/tmp$last_num"
                     cd "$dir"
                 fi
-                nvim src/main.rs
+                nvim src/main.cpp
             else
                 dir="$BASE_DIR/cpp/tmp$cmd"
                 if [ -d "$dir" ]; then
                     cd "$dir"
-                    nvim src/main.rs
+                    nvim src/main.cpp
+                else
+                    echo "Environment tmp$cmd does not exist."
+                fi
+            fi
+            ;;
+    esac
+}
+
+handle_c() {
+    cmd="$1"
+    case "$cmd" in
+        new)
+            dir=$(create_new_env "c")
+            cd "$dir"
+            cmake-init c
+            nvim src/main.c
+            ;;
+        list)
+            list_envs "c"
+            ;;
+        clean)
+            clean_envs "c"
+            ;;
+        rm)
+            remove_env "c" "$2"
+            ;;
+        *)
+            if [ -z "$cmd" ]; then
+                last_num=$(get_highest_env "c")
+                if [ "$last_num" -eq -1 ]; then
+                    dir=$(create_new_env "c")
+                    cd "$dir"
+                else
+                    dir="$BASE_DIR/c/tmp$last_num"
+                    cd "$dir"
+                fi
+                nvim src/main.c
+            else
+                dir="$BASE_DIR/c/tmp$cmd"
+                if [ -d "$dir" ]; then
+                    cd "$dir"
+                    nvim src/main.c
                 else
                     echo "Environment tmp$cmd does not exist."
                 fi
@@ -296,6 +335,12 @@ case "$lang" in
         ;;
     python)
         handle_python "$@"
+        ;;
+    cpp)
+        handle_cpp "$@"
+        ;;
+    c)
+        handle_c "$@"
         ;;
     fish)
         handle_fish "$@"
