@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ "$1" =~ (yaml|text|json|xml)$ ]]; then
+  curl "https://myip.wtf/$1" 2>/dev/null
+else
+  echo "Missing output format, provide one."
+  echo "Usage: wmip [text|json|yaml|xml]"
+fi

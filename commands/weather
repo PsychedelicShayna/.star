@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# $1 = Specific Location
+# Uses geoip to guess current location if not provided.
+curl "wttr.in/$1"
