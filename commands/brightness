@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Description: Use xrandr to set the brightness to the provided value for all display outputs or specified ones.
+# If the first argument is 'list', '-l', or '--list', it lists the displays.
+# If called with no arguments or 'help', '-h', '--help', it prints help text.
+
+# Function to print the list of display outputs
+list_displays() {
+    echo "Available displays:"
+    xrandr --listmonitors | awk 'NR>1 { print $NF }'
+}
+
+# Function to print the help message
+print_help() {
+    cat << EOF
+Usage: $0 [BRIGHTNESS] [DISPLAY...]
+       $0 [COMMAND]
+
+Commands:
+  list, -l, --list          List available displays.
+  help, -h, --help          Show this help message.
+
+If BRIGHTNESS is provided, the brightness value is set for all displays by default.
+If specific DISPLAY arguments are provided, brightness is only set for those displays.
+EOF
+}
+
+# Check if no arguments are provided or help flag is requested
+if [[ $# -eq 0 || "$1" == "help" || "$1" == "-h" || "$1" == "--help" ]]; then
+    print_help
+    exit 0
+fi
+
+# Check if the user wants to list the displays
+if [[ "$1" == "list" || "$1" == "-l" || "$1" == "--list" ]]; then
+    list_displays
+    exit 0
+fi
+
+# Get the brightness value from the first argument
+value="$1"
+
+# Shift past the brightness argument
+shift
+
+# If additional arguments (specific displays) are given, use them, otherwise get all displays
+if [[ $# -gt 0 ]]; then
+    outputs="$@"
+else
+    outputs=$(xrandr --listmonitors | awk 'NR>1 { print $NF }')
+fi
+
+# Set brightness for each specified output
+for output in $outputs; do
+    xrandr --output "$output" --brightness "$value"
+    echo "Set brightness to $value for $output"
+done
