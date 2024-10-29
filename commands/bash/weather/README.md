@@ -1,4 +1,4 @@
-# Weather
+# weather
 
 Curls https://wttr.in/ and renders a pretty weather forecast for your GeoIP estimated location with no arguments, or you can supply a specific location as an argument.
 

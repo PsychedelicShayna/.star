@@ -1,24 +1,36 @@
-# cmake-init
+# brightness
 
-Kind of like the cmake equivalent of `cargo init`, will populate the current directory with everything necessary for a minimal CMake C/C++ project. If called like this: `cmake-init c` then it will generate a C project instead. 
+A convenient way to change the brightness of your monitors through xrandr.
 
-It will create a number of files and perform various actions.
+## Usage
 
-- Creates Following
-    - `LICENSE` (GPL v3.0)
-    - `.gitignore`
-    - `.clang-format`
-    - `CMakeLists.txt`
-    - `build` (bash script)
-    - `README.md` 
-    - `out/`
-    - `src/main.cpp` or `src/main.c`
-        Contains a hello world, with the most commonly used headers already included.
+```
+Usage: brightness [BRIGHTNESS] [DISPLAY...]
+       brightness [COMMAND]
 
-- Runs Following
-    - `git init`
+Commands:
+  list, -l, --list          List available displays.
+  help, -h, --help          Show this help message.
 
----
+If BRIGHTNESS is provided, the brightness value is set for all displays by default.
+If specific DISPLAY arguments are provided, brightness is only set for those displays.
+```
 
+## Examples:
 
+```
+$ brightness 1.2 DP-4 HDMI-0
+
+Set brightness to 1.2 for DP-4
+Set brightness to 1.2 for HDMI-0
+```
+
+```
+$ brightness -l
+
+Available displays:
+DP-4
+HDMI-0
+HDMI-1
+```
 

@@ -1,24 +1,29 @@
-# cmake-init
+# epd (Edit, Pipe, Delete)
 
-Kind of like the cmake equivalent of `cargo init`, will populate the current directory with everything necessary for a minimal CMake C/C++ project. If called like this: `cmake-init c` then it will generate a C project instead. 
+Conceptually pretty simple, but incredibly useful. This command creates a temporary file, opens it in your default editor as defined by your EDITOR environment variables (falls back to vim) if the environment variable doesn't eixst. Then, upon saving and quitting, the contents of the file are piped in to the command following epd.
 
-It will create a number of files and perform various actions.
 
-- Creates Following
-    - `LICENSE` (GPL v3.0)
-    - `.gitignore`
-    - `.clang-format`
-    - `CMakeLists.txt`
-    - `build` (bash script)
-    - `README.md` 
-    - `out/`
-    - `src/main.cpp` or `src/main.c`
-        Contains a hello world, with the most commonly used headers already included.
+```
+  epd (E)dit (P)ipe (D)elete
 
-- Runs Following
-    - `git init`
+  Usage: epd [COMMAND]
+  
+  This script creates a temporary file, opens it with your editor (as defined by the $EDITOR environment variable),
+  and then pipes the file's contents to the specified command. After piping the contents, the temporary file is deleted.
+  It edits, pipes, deletes.
+  
+  Example:
+    epd hexdump
+  
+  Options:
+     --help    Display this help message and exit. 
+```
 
----
+A visual example of how using `epd` to pipe content to another command can be seen here:
+
+
+
+
 
 
 

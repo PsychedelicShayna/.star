@@ -1,24 +1,13 @@
-# cmake-init
+# goimg (Google Images)
 
-Kind of like the cmake equivalent of `cargo init`, will populate the current directory with everything necessary for a minimal CMake C/C++ project. If called like this: `cmake-init c` then it will generate a C project instead. 
+Formulates a Google Images search query from the supplied arguments, an dpens
+the link in your default browser.
 
-It will create a number of files and perform various actions.
+Example
+```
+$ goimg Linux distro venn diagram
+```
 
-- Creates Following
-    - `LICENSE` (GPL v3.0)
-    - `.gitignore`
-    - `.clang-format`
-    - `CMakeLists.txt`
-    - `build` (bash script)
-    - `README.md` 
-    - `out/`
-    - `src/main.cpp` or `src/main.c`
-        Contains a hello world, with the most commonly used headers already included.
-
-- Runs Following
-    - `git init`
-
----
-
-
+Would be the same as heading to https://www.google.com/search?q=goim+Linux+distro+venn+diagram&udm=2 in your default browser.
+Python is used to formulate the URL, and then it's just opened via xdg-open.
 
