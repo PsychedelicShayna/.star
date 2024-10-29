@@ -4,6 +4,7 @@ Curls https://wttr.in/ and renders a pretty weather forecast for your GeoIP esti
 
 
 
+![ksnip_tmp_UPtjfG](https://github.com/user-attachments/assets/53e23a14-99dd-4f43-89c6-a219f08f95a4)
 
 
 
