@@ -1,8 +1,4 @@
-# Shell Scripts
-
-A collection of some shell scripts I use to make life easier.
-
-## cmake-init
+# cmake-init
 
 Kind of like the cmake equivalent of `cargo init`, will populate the current directory with everything necessary for a minimal CMake C/C++ project. If called like this: `cmake-init c` then it will generate a C project instead. 
 
