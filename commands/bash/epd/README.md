@@ -19,11 +19,6 @@ Conceptually pretty simple, but incredibly useful. This command creates a tempor
      --help    Display this help message and exit. 
 ```
 
-A visual example of how using `epd` to pipe content to another command can be seen here:
+A visual example of how using `epd` to pipe content to another command can be seen here (formerly called ped):
 
-
-
-
-
-
-
+https://github.com/user-attachments/assets/62b1bea5-709d-4f38-802f-fbc5cb6385e4
